@@ -1,0 +1,565 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Scheme Simplifier | Public Services Made Simple</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        theme: {
+                            charcoal: '#2B2D42',
+                            slate: '#8D99AE',
+                            cream: '#F4F1DE',
+                            terracotta: '#E07A5F',
+                            coral: '#F2CC8F',
+                            emerald: '#38A169',
+                            softEmerald: '#81B29A',
+                            darkBg: '#1A1C29'
+                        }
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                    }
+                }
+            }
+        }
+    </script>
+    <!-- Google Fonts Inter -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        body { font-family: 'Inter', sans-serif; }
+        .hero-gradient {
+            background: linear-gradient(135deg, #2B2D42 0%, #1A1C29 100%);
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .animate-fade-in {
+            animation: fadeIn 0.4s ease-out forwards;
+        }
+    </style>
+</head>
+<body class="bg-[#F9F8F6] text-[#2B2D42] min-h-screen flex flex-col justify-between selection:bg-[#E07A5F] selection:text-white">
+
+    <!-- Toast Notification Container -->
+    <div id="toastContainer" class="fixed bottom-5 right-5 z-50 flex flex-col gap-2 pointer-events-none"></div>
+
+    <!-- Header -->
+    <header class="bg-[#2B2D42] text-white sticky top-0 z-40 border-b border-slate-700/60 shadow-md">
+        <div class="max-w-7xl mx-auto px-6 py-4 flex justify-between items-center">
+            <div class="flex items-center gap-3">
+                <div class="bg-gradient-to-tr from-[#E07A5F] to-[#F2CC8F] p-2.5 rounded-xl shadow-lg shadow-[#E07A5F]/20 text-[#2B2D42] font-bold text-lg flex items-center justify-center w-10 h-10">
+                    <i class="fa-solid fa-scale-balanced"></i>
+                </div>
+                <div>
+                    <span class="text-xl font-bold tracking-tight bg-gradient-to-r from-white via-slate-100 to-[#F2CC8F] bg-clip-text text-transparent">SchemeSimplifier</span>
+                    <span class="block text-xs text-[#8D99AE] font-medium">Public Services Made Accessible</span>
+                </div>
+            </div>
+            <nav class="hidden md:flex items-center gap-6 text-sm font-medium">
+                <a href="#finder" class="hover:text-[#E07A5F] transition-colors">Find Schemes</a>
+                <a href="#simplifier" class="hover:text-[#E07A5F] transition-colors">Simplify Document</a>
+                <a href="#howitworks" class="hover:text-[#E07A5F] transition-colors">How It Works</a>
+                <button onclick="fillDemoData()" class="bg-[#E07A5F] hover:bg-[#c9684e] text-white px-4 py-2 rounded-lg text-xs font-semibold transition-all shadow-sm flex items-center gap-2">
+                    <i class="fa-solid fa-bolt"></i> Quick Demo Fill
+                </button>
+            </nav>
+            <!-- Mobile Menu Toggle -->
+            <button class="md:hidden text-slate-300 hover:text-white p-2" onclick="toggleMobileMenu()">
+                <i class="fa-solid fa-bars text-xl"></i>
+            </button>
+        </div>
+        <!-- Mobile Nav Dropdown -->
+        <div id="mobileMenu" class="hidden md:hidden bg-[#1A1C29] border-t border-slate-800 px-6 py-4 flex flex-col gap-3">
+            <a href="#finder" onclick="toggleMobileMenu()" class="text-slate-300 hover:text-[#E07A5F] py-1">Find Schemes</a>
+            <a href="#simplifier" onclick="toggleMobileMenu()" class="text-slate-300 hover:text-[#E07A5F] py-1">Simplify Document</a>
+            <a href="#howitworks" onclick="toggleMobileMenu()" class="text-slate-300 hover:text-[#E07A5F] py-1">How It Works</a>
+            <button onclick="fillDemoData(); toggleMobileMenu();" class="bg-[#E07A5F] text-white px-4 py-2 rounded-lg text-sm font-semibold text-center mt-2">
+                Quick Demo Fill
+            </button>
+        </div>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="hero-gradient text-white py-20 px-6 relative overflow-hidden border-b border-slate-800">
+        <div class="absolute -right-20 -top-20 w-96 h-96 bg-[#E07A5F]/15 rounded-full blur-3xl pointer-events-none"></div>
+        <div class="absolute -left-20 -bottom-20 w-96 h-96 bg-[#38A169]/15 rounded-full blur-3xl pointer-events-none"></div>
+        
+        <div class="max-w-4xl mx-auto text-center relative z-10">
+            <div class="inline-flex items-center gap-2 bg-slate-800/90 border border-slate-700 text-[#F2CC8F] px-3.5 py-1.5 rounded-full text-xs font-semibold mb-6 shadow-inner">
+                <i class="fa-solid fa-sparkles"></i> Sunset Emerald & Warm Slate Edition
+            </div>
+            <h1 class="text-4xl md:text-6xl font-extrabold tracking-tight mb-6 leading-tight">
+                Government Services, <span class="bg-gradient-to-r from-[#E07A5F] via-[#F2CC8F] to-[#81B29A] bg-clip-text text-transparent">Made Simple.</span>
+            </h1>
+            <p class="text-lg md:text-xl text-[#8D99AE] max-w-2xl mx-auto mb-10 font-light leading-relaxed">
+                Discover relevant government welfare schemes matched to your precise profile and translate complex official circulars into clear, actionable bullet points instantly.
+            </p>
+            <div class="flex flex-wrap justify-center gap-4">
+                <button onclick="document.getElementById('finder').scrollIntoView({behavior:'smooth'})" class="bg-[#E07A5F] hover:bg-[#c9684e] text-white font-semibold px-8 py-3.5 rounded-xl transition-all shadow-lg shadow-[#E07A5F]/30 flex items-center gap-3 group">
+                    <span>Find My Schemes</span>
+                    <i class="fa-solid fa-arrow-down group-hover:translate-y-1 transition-transform"></i>
+                </button>
+                <button onclick="document.getElementById('simplifier').scrollIntoView({behavior:'smooth'})" class="bg-slate-800/80 hover:bg-slate-700 text-white font-semibold px-8 py-3.5 rounded-xl border border-slate-600 transition-all shadow-md">
+                    Simplify Circular Text
+                </button>
+            </div>
+        </div>
+    </section>
+
+    <!-- Main Content Area -->
+    <main class="flex-grow max-w-7xl mx-auto px-6 py-12 w-full space-y-20">
+
+        <!-- Section 1: Scheme Finder -->
+        <section id="finder" class="scroll-mt-28">
+            <div class="text-center max-w-2xl mx-auto mb-12">
+                <h2 class="text-3xl font-bold tracking-tight text-[#2B2D42] mb-3">Find Government Schemes</h2>
+                <p class="text-[#8D99AE] text-base">Enter your details below to explore welfare schemes that match your eligibility profile.</p>
+            </div>
+
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+                <!-- Input Form Card -->
+                <div class="lg:col-span-5 bg-[#F4F1DE] rounded-2xl border border-slate-300/80 shadow-xl p-8 relative overflow-hidden">
+                    <div class="absolute top-0 left-0 right-0 h-1.5 bg-gradient-to-r from-[#E07A5F] via-[#F2CC8F] to-[#38A169]"></div>
+                    <div class="flex justify-between items-center mb-6">
+                        <h3 class="text-lg font-bold text-[#2B2D42] flex items-center gap-2">
+                            <i class="fa-solid fa-user-pen text-[#E07A5F]"></i> Your Profile Information
+                        </h3>
+                        <button type="button" onclick="fillDemoData()" class="text-xs font-semibold text-[#E07A5F] hover:text-[#c9684e] bg-amber-100/70 hover:bg-amber-100 px-3 py-1.5 rounded-lg transition-colors">
+                            Demo Fill
+                        </button>
+                    </div>
+
+                    <form id="schemeForm" class="space-y-5">
+                        <div>
+                            <label for="age" class="block text-sm font-semibold text-[#2B2D42] mb-1.5">Age</label>
+                            <div class="relative">
+                                <span class="absolute inset-y-0 left-0 flex items-center pl-3.5 text-slate-500"><i class="fa-solid fa-calendar-days"></i></span>
+                                <input type="number" id="age" min="1" max="120" placeholder="Enter your age" required
+                                    class="w-full pl-11 pr-4 py-3 bg-white border border-slate-300 rounded-xl text-[#2B2D42] text-sm focus:ring-2 focus:ring-[#E07A5F] focus:outline-none transition-all">
+                            </div>
+                        </div>
+
+                        <div>
+                            <label for="state" class="block text-sm font-semibold text-[#2B2D42] mb-1.5">State / Region</label>
+                            <div class="relative">
+                                <span class="absolute inset-y-0 left-0 flex items-center pl-3.5 text-slate-500"><i class="fa-solid fa-map-location-dot"></i></span>
+                                <select id="state" required
+                                    class="w-full pl-11 pr-4 py-3 bg-white border border-slate-300 rounded-xl text-[#2B2D42] text-sm focus:ring-2 focus:ring-[#E07A5F] focus:outline-none transition-all appearance-none cursor-pointer">
+                                    <option value="">Select your state</option>
+                                    <option>Andhra Pradesh</option>
+                                    <option>Telangana</option>
+                                    <option>Karnataka</option>
+                                    <option>Tamil Nadu</option>
+                                    <option>Maharashtra</option>
+                                    <option>Kerala</option>
+                                    <option>Other / Pan-India</option>
+                                </select>
+                                <span class="absolute inset-y-0 right-0 flex items-center pr-4 text-slate-500 pointer-events-none"><i class="fa-solid fa-chevron-down text-xs"></i></span>
+                            </div>
+                        </div>
+
+                        <div>
+                            <label for="student" class="block text-sm font-semibold text-[#2B2D42] mb-1.5">Are you currently a student?</label>
+                            <div class="relative">
+                                <span class="absolute inset-y-0 left-0 flex items-center pl-3.5 text-slate-500"><i class="fa-solid fa-graduation-cap"></i></span>
+                                <select id="student" required
+                                    class="w-full pl-11 pr-4 py-3 bg-white border border-slate-300 rounded-xl text-[#2B2D42] text-sm focus:ring-2 focus:ring-[#E07A5F] focus:outline-none transition-all appearance-none cursor-pointer">
+                                    <option value="">Choose an option</option>
+                                    <option value="yes">Yes, I am a student</option>
+                                    <option value="no">No</option>
+                                </select>
+                                <span class="absolute inset-y-0 right-0 flex items-center pr-4 text-slate-500 pointer-events-none"><i class="fa-solid fa-chevron-down text-xs"></i></span>
+                            </div>
+                        </div>
+
+                        <div>
+                            <label for="income" class="block text-sm font-semibold text-[#2B2D42] mb-1.5">Annual Family Income (₹)</label>
+                            <div class="relative">
+                                <span class="absolute inset-y-0 left-0 flex items-center pl-3.5 text-slate-500"><i class="fa-solid fa-indian-rupee-sign"></i></span>
+                                <input type="number" id="income" min="0" placeholder="Example: 150000" required
+                                    class="w-full pl-11 pr-4 py-3 bg-white border border-slate-300 rounded-xl text-[#2B2D42] text-sm focus:ring-2 focus:ring-[#E07A5F] focus:outline-none transition-all">
+                            </div>
+                        </div>
+
+                        <button type="submit" class="w-full bg-[#E07A5F] hover:bg-[#c9684e] text-white font-semibold py-3.5 px-6 rounded-xl transition-all shadow-lg shadow-[#E07A5F]/25 flex items-center justify-center gap-2 mt-2">
+                            <i class="fa-solid fa-magnifying-glass"></i> Find Matching Schemes
+                        </button>
+                    </form>
+                </div>
+
+                <!-- Results Panel -->
+                <div class="lg:col-span-7 bg-white rounded-2xl border border-slate-200 shadow-xl p-8 flex flex-col justify-between min-h-[500px]">
+                    <div>
+                        <div class="flex justify-between items-center border-b border-slate-100 pb-4 mb-6">
+                            <h3 class="text-lg font-bold text-[#2B2D42] flex items-center gap-2">
+                                <i class="fa-solid fa-square-poll-vertical text-[#38A169]"></i> Matching Results
+                            </h3>
+                            <span id="matchCountBadge" class="hidden bg-emerald-100 text-emerald-800 text-xs font-bold px-3 py-1 rounded-full">0 found</span>
+                        </div>
+
+                        <div id="results" class="space-y-4" aria-live="polite">
+                            <!-- Empty State Illustration / Message -->
+                            <div class="text-center py-20 px-4">
+                                <div class="w-16 h-16 bg-[#F4F1DE] text-[#2B2D42] rounded-2xl flex items-center justify-center mx-auto mb-4 text-2xl shadow-inner">
+                                    <i class="fa-solid fa-clipboard-list"></i>
+                                </div>
+                                <h4 class="text-base font-bold text-[#2B2D42] mb-1">No search performed yet</h4>
+                                <p class="text-sm text-[#8D99AE] max-w-sm mx-auto">Fill in your information on the left and click search to view eligible welfare schemes.</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="mt-8 bg-amber-50 border border-amber-200 p-4 rounded-xl text-amber-900 text-xs flex gap-3 items-start">
+                        <i class="fa-solid fa-triangle-exclamation text-[#E07A5F] text-base mt-0.5"></i>
+                        <div>
+                            <span class="font-bold">Prototype Notice:</span> The schemes shown in this demo are sample listings for testing user eligibility workflows. Always verify final benefits with official government portals.
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Section 2: Document Simplifier -->
+        <section id="simplifier" class="scroll-mt-28 bg-[#2B2D42] rounded-3xl p-8 md:p-12 text-white shadow-2xl relative overflow-hidden border border-slate-700">
+            <div class="absolute right-0 bottom-0 w-80 h-80 bg-[#38A169]/10 rounded-full blur-3xl pointer-events-none"></div>
+            
+            <div class="max-w-3xl mx-auto text-center mb-10">
+                <div class="inline-flex items-center gap-2 bg-slate-800 text-[#F2CC8F] px-3 py-1 rounded-full text-xs font-semibold mb-4 border border-slate-700">
+                    <i class="fa-solid fa-wand-magic-sparkles"></i> Plain Language AI Engine
+                </div>
+                <h2 class="text-3xl md:text-4xl font-bold tracking-tight mb-3">Simplify a Government Document</h2>
+                <p class="text-[#8D99AE] text-sm md:text-base">Paste complicated legal text, circular paragraphs, or bureaucratic notifications to break them down instantly into clear bullet points.</p>
+            </div>
+
+            <div class="max-w-4xl mx-auto grid grid-cols-1 md:grid-cols-12 gap-6 items-start">
+                <div class="md:col-span-7 space-y-4">
+                    <label for="documentText" class="block text-sm font-semibold text-slate-200">Paste your document or circular text</label>
+                    <textarea id="documentText" rows="6" placeholder="Paste official text here (e.g., 'All applicants under scheme X who submit form 12B prior to 31st March shall receive direct benefit transfers provided their annual income threshold is maintained...')"
+                        class="w-full p-4 bg-[#1A1C29] border border-slate-700 rounded-2xl text-white text-sm focus:ring-2 focus:ring-[#E07A5F] focus:outline-none transition-all placeholder:text-slate-500 resize-y shadow-inner"></textarea>
+                    
+                    <div class="flex items-center justify-between gap-4">
+                        <div class="w-1/2">
+                            <label for="language" class="block text-xs font-semibold text-slate-300 mb-1">Target Language Style</label>
+                            <select id="language" class="w-full px-3 py-2.5 bg-[#1A1C29] border border-slate-700 rounded-xl text-sm text-white focus:outline-none focus:ring-2 focus:ring-[#E07A5F]">
+                                <option value="en">Simple English</option>
+                            </select>
+                        </div>
+                        <button onclick="fillSampleDocument()" class="self-end text-xs font-medium text-[#F2CC8F] hover:text-white bg-slate-800 hover:bg-slate-700 px-3 py-2.5 rounded-xl border border-slate-700 transition-colors">
+                            <i class="fa-solid fa-file-lines mr-1"></i> Load Sample Circular
+                        </button>
+                    </div>
+
+                    <button onclick="simplifyDocument()" class="w-full bg-gradient-to-r from-[#E07A5F] to-[#38A169] hover:opacity-95 text-white font-bold py-3.5 px-6 rounded-xl transition-all shadow-lg shadow-[#E07A5F]/30 flex items-center justify-center gap-2">
+                        <i class="fa-solid fa-bolt"></i> Simplify Text Now
+                    </button>
+                </div>
+
+                <!-- Summary Output Box -->
+                <div class="md:col-span-5 bg-[#1A1C29] border border-slate-700 rounded-2xl p-6 flex flex-col justify-between min-h-[340px] shadow-inner">
+                    <div>
+                        <div class="flex justify-between items-center border-b border-slate-700 pb-3 mb-4">
+                            <h4 class="text-sm font-bold text-[#81B29A] uppercase tracking-wider flex items-center gap-2">
+                                <i class="fa-solid fa-list-check"></i> Simplified Breakdown
+                            </h4>
+                            <button id="copyBtn" onclick="copySimplifiedText()" class="hidden text-xs text-slate-300 hover:text-white bg-slate-800 hover:bg-slate-700 px-2.5 py-1 rounded-lg transition-colors">
+                                <i class="fa-regular fa-copy"></i> Copy
+                            </button>
+                        </div>
+                        <div id="summaryOutput" class="text-sm text-slate-300 space-y-3 leading-relaxed" aria-live="polite">
+                            <p class="text-slate-500 italic">Your structured points will appear here after clicking Simplify Text.</p>
+                        </div>
+                    </div>
+                    <div class="text-[11px] text-slate-400 border-t border-slate-800 pt-3 mt-4">
+                        Structured point parser. Always cross-check deadlines and amounts with the source circular.
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Section 3: How It Works -->
+        <section id="howitworks" class="scroll-mt-28 py-6">
+            <div class="text-center max-w-2xl mx-auto mb-12">
+                <h2 class="text-3xl font-bold tracking-tight text-[#2B2D42] mb-3">How Scheme Simplifier Works</h2>
+                <p class="text-[#8D99AE] text-base">Designed for citizens to navigate public services effortlessly in three simple steps.</p>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                <div class="bg-[#F4F1DE] p-8 rounded-2xl border border-slate-300/60 shadow-md hover:shadow-xl transition-all group">
+                    <div class="w-12 h-12 bg-[#E07A5F] text-white rounded-xl flex items-center justify-center font-bold text-lg mb-6 shadow-sm">
+                        01
+                    </div>
+                    <h3 class="text-lg font-bold text-[#2B2D42] mb-2">Enter Details</h3>
+                    <p class="text-[#8D99AE] text-sm leading-relaxed">Provide basic profile information such as age, state, student status, and annual family income.</p>
+                </div>
+
+                <div class="bg-[#F4F1DE] p-8 rounded-2xl border border-slate-300/60 shadow-md hover:shadow-xl transition-all group">
+                    <div class="w-12 h-12 bg-[#38A169] text-white rounded-xl flex items-center justify-center font-bold text-lg mb-6 shadow-sm">
+                        02
+                    </div>
+                    <h3 class="text-lg font-bold text-[#2B2D42] mb-2">Explore Results</h3>
+                    <p class="text-[#8D99AE] text-sm leading-relaxed">Review potential matching benefits, state-specific grants, and transparent requirement limits.</p>
+                </div>
+
+                <div class="bg-[#F4F1DE] p-8 rounded-2xl border border-slate-300/60 shadow-md hover:shadow-xl transition-all group">
+                    <div class="w-12 h-12 bg-[#2B2D42] text-white rounded-xl flex items-center justify-center font-bold text-lg mb-6 shadow-sm">
+                        03
+                    </div>
+                    <h3 class="text-lg font-bold text-[#2B2D42] mb-2">Understand Circulars</h3>
+                    <p class="text-[#8D99AE] text-sm leading-relaxed">Paste complex bureaucratic notifications and translate them into clear, easy-to-read bullet lists.</p>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-[#1A1C29] text-white border-t border-slate-800 py-12 px-6 mt-20">
+        <div class="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-center gap-6">
+            <div class="text-center md:text-left">
+                <div class="text-lg font-bold tracking-tight mb-1">Scheme Simplifier</div>
+                <p class="text-xs text-[#8D99AE]">Making public welfare information accessible to every citizen.</p>
+            </div>
+            <div class="text-center md:text-right text-xs text-[#8D99AE] space-y-1">
+                <p>Educational prototype — not an official government website.</p>
+                <p class="text-slate-500">&copy; 2026 Scheme Simplifier Project. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- JavaScript Application Logic -->
+    <script>
+        // Fictional Scheme Dataset for testing
+        const schemes = [
+            {
+                name: "Example Student Support Scheme",
+                state: "All",
+                minAge: 18,
+                maxAge: 25,
+                maxIncome: 200000,
+                student: true,
+                description: "Fictional financial assistance grant for undergraduate and graduate scholars pursuing higher education."
+            },
+            {
+                name: "Example Youth Development Scheme",
+                state: "All",
+                minAge: 18,
+                maxAge: 30,
+                maxIncome: 300000,
+                student: false,
+                description: "Fictional skill training and entrepreneurship starter grant for young adults seeking employment."
+            },
+            {
+                name: "Example Telangana Student Excellence Grant",
+                state: "Telangana",
+                minAge: 16,
+                maxAge: 25,
+                maxIncome: 250000,
+                student: true,
+                description: "Fictional state-specific scholarship initiative for students enrolled in professional degree courses."
+            },
+            {
+                name: "Example Andhra Pradesh Skill Stipend",
+                state: "Andhra Pradesh",
+                minAge: 18,
+                maxAge: 35,
+                maxIncome: 220000,
+                student: false,
+                description: "Fictional vocational training support scheme for residents of Andhra Pradesh."
+            }
+        ];
+
+        // Toast Notification System
+        function showToast(message, type = 'success') {
+            const container = document.getElementById('toastContainer');
+            const toast = document.createElement('div');
+            toast.className = `pointer-events-auto flex items-center gap-3 px-4 py-3 rounded-xl shadow-xl text-white text-xs font-semibold transform transition-all duration-300 translate-y-2 opacity-0 ${
+                type === 'success' ? 'bg-[#38A169]' : 'bg-[#2B2D42] border border-slate-700'
+            }`;
+            toast.innerHTML = `<i class="fa-solid ${type === 'success' ? 'fa-circle-check text-emerald-200' : 'fa-circle-info text-[#F2CC8F]'} text-sm"></i> <span>${message}</span>`;
+            container.appendChild(toast);
+
+            setTimeout(() => {
+                toast.classList.remove('translate-y-2', 'opacity-0');
+            }, 10);
+
+            setTimeout(() => {
+                toast.classList.add('translate-y-2', 'opacity-0');
+                setTimeout(() => toast.remove(), 300);
+            }, 3500);
+        }
+
+        // Toggle Mobile Menu
+        function toggleMobileMenu() {
+            const menu = document.getElementById('mobileMenu');
+            menu.classList.toggle('hidden');
+        }
+
+        // Quick Demo Fill Preset
+        function fillDemoData() {
+            document.getElementById('age').value = '21';
+            document.getElementById('state').value = 'Telangana';
+            document.getElementById('student').value = 'yes';
+            document.getElementById('income').value = '180000';
+            showToast('Demo profile loaded successfully!');
+            document.getElementById('schemeForm').dispatchEvent(new Event('submit'));
+        }
+
+        // Load Sample Circular Text
+        function fillSampleDocument() {
+            document.getElementById('documentText').value = 
+                "Notice No. 45/2026: All eligible residents under the state welfare directive who fall within the prescribed age bracket of 18 to 30 years and whose annual family income does not exceed ₹2,50,000 are hereby instructed to submit Form A-12 along with income certificates at the district municipal office on or before 31st March. Failure to submit required documents prior to the deadline shall result in forfeiture of quarterly beneficiary disbursements.";
+            showToast('Sample circular text loaded!', 'info');
+        }
+
+        // Scheme Form Submission Event Listener
+        document.getElementById("schemeForm").addEventListener("submit", function(event) {
+            event.preventDefault();
+
+            const age = Number(document.getElementById("age").value);
+            const state = document.getElementById("state").value;
+            const student = document.getElementById("student").value === "yes";
+            const income = Number(document.getElementById("income").value);
+
+            const results = document.getElementById("results");
+            const matchCountBadge = document.getElementById("matchCountBadge");
+
+            if (!Number.isFinite(age) || age < 1 || age > 120 || !Number.isFinite(income) || income < 0) {
+                showToast("Please enter valid profile details.", "error");
+                return;
+            }
+
+            // Filter matching schemes
+            const matching = schemes.filter(function(scheme) {
+                const ageMatches = age >= scheme.minAge && age <= scheme.maxAge;
+                const incomeMatches = income <= scheme.maxIncome;
+                const studentMatches = !scheme.student || student;
+                const stateMatches = scheme.state === "All" || scheme.state === state;
+                return ageMatches && incomeMatches && studentMatches && stateMatches;
+            });
+
+            results.replaceChildren();
+
+            matchCountBadge.textContent = matching.length + " found";
+            matchCountBadge.classList.remove('hidden');
+
+            if (matching.length === 0) {
+                const emptyDiv = document.createElement("div");
+                emptyDiv.className = "text-center py-12 px-4 animate-fade-in";
+                emptyDiv.innerHTML = `
+                    <div class="w-14 h-14 bg-amber-50 text-[#E07A5F] rounded-2xl flex items-center justify-center mx-auto mb-3 text-xl shadow-inner">
+                        <i class="fa-solid fa-triangle-exclamation"></i>
+                    </div>
+                    <h4 class="text-sm font-bold text-[#2B2D42] mb-1">No matching demonstration schemes</h4>
+                    <p class="text-xs text-[#8D99AE] max-w-xs mx-auto">No demo schemes matched your exact criteria. Try adjusting income or student status.</p>
+                `;
+                results.appendChild(emptyDiv);
+                showToast("Search completed: 0 matching demo schemes.", "info");
+                return;
+            }
+
+            showToast(`Found ${matching.length} matching demonstration scheme(s)!`);
+
+            matching.forEach(function(scheme, index) {
+                const box = document.createElement("div");
+                box.className = "bg-gradient-to-br from-white to-[#F4F1DE]/40 border border-slate-200 border-l-4 border-l-[#E07A5F] rounded-2xl p-5 shadow-sm hover:shadow-md transition-all animate-fade-in";
+                box.style.animationDelay = `${index * 80}ms`;
+
+                const headerRow = document.createElement("div");
+                headerRow.className = "flex justify-between items-start gap-2 mb-2";
+
+                const title = document.createElement("h4");
+                title.className = "text-base font-bold text-[#2B2D42]";
+                title.textContent = scheme.name;
+
+                const badge = document.createElement("span");
+                badge.className = "bg-emerald-100 text-emerald-800 text-[11px] font-bold px-2.5 py-1 rounded-full whitespace-nowrap";
+                badge.textContent = "Demo Match";
+
+                headerRow.append(title, badge);
+
+                const description = document.createElement("p");
+                description.className = "text-xs text-[#8D99AE] mb-3 leading-relaxed";
+                description.textContent = scheme.description;
+
+                const requirements = document.createElement("div");
+                requirements.className = "text-xs text-[#2B2D42] bg-[#F4F1DE]/80 border border-slate-200/60 p-2.5 rounded-xl flex flex-wrap gap-x-4 gap-y-1";
+                requirements.innerHTML = `
+                    <span><i class="fa-solid fa-user-clock text-[#E07A5F] mr-1"></i> Age: <strong>${scheme.minAge}–${scheme.maxAge} yrs</strong></span>
+                    <span><i class="fa-solid fa-indian-rupee-sign text-[#38A169] mr-1"></i> Max Income: <strong>₹${scheme.maxIncome.toLocaleString("en-IN")}</strong></span>
+                `;
+
+                box.append(headerRow, description, requirements);
+                results.appendChild(box);
+            });
+        });
+
+        // Document Simplifier Function
+        function simplifyDocument() {
+            const text = document.getElementById("documentText").value.trim();
+            const output = document.getElementById("summaryOutput");
+            const copyBtn = document.getElementById("copyBtn");
+
+            output.replaceChildren();
+
+            if (!text) {
+                output.innerHTML = '<p class="text-[#F2CC8F] text-xs italic">Please paste some document text or load the sample circular first.</p>';
+                copyBtn.classList.add('hidden');
+                showToast("Please enter text to simplify.", "error");
+                return;
+            }
+
+            // Clean and split sentences
+            const sentences = text
+                .replace(/\s+/g, " ")
+                .split(/(?<=[.!?])\s+/)
+                .filter(sentence => sentence.trim().length > 0);
+
+            const list = document.createElement("ul");
+            list.className = "space-y-2.5";
+
+            sentences.forEach(function(sentence, idx) {
+                const item = document.createElement("li");
+                item.className = "flex items-start gap-2.5 text-xs md:text-sm text-slate-200 animate-fade-in";
+                item.style.animationDelay = `${idx * 60}ms`;
+                item.innerHTML = `
+                    <span class="bg-[#38A169]/30 text-[#81B29A] w-5 h-5 rounded-full flex items-center justify-center text-[10px] font-bold shrink-0 mt-0.5"><i class="fa-solid fa-check text-[10px]"></i></span>
+                    <span>${sentence.trim()}</span>
+                `;
+                list.appendChild(item);
+            });
+
+            output.appendChild(list);
+            copyBtn.classList.remove('hidden');
+            showToast("Document successfully structured into points!");
+        }
+
+        // Copy Simplified Text
+        function copySimplifiedText() {
+            const summaryContainer = document.getElementById("summaryOutput");
+            const textToCopy = summaryContainer.innerText;
+            
+            const textarea = document.createElement("textarea");
+            textarea.value = textToCopy;
+            document.body.appendChild(textarea);
+            textarea.select();
+            try {
+                document.execCommand('copy');
+                showToast("Simplified points copied to clipboard!");
+            } catch (err) {
+                showToast("Failed to copy text.", "error");
+            }
+            document.body.removeChild(textarea);
+        }
+    </script>
+</body>
+</html>
